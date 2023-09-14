@@ -12,7 +12,7 @@ function processImages(docsDir = DOCS_DIR) {
     sharp(imgPath)
       .resize(800)
       .png({ quality: 80 })
-      .toFile(`${imgPath}.tmp`, (err, info) => {
+      .toFile(`${imgPath}.tmp`, (err) => {
         if (err) {
           console.error(`Failed to process image: ${imgPath}`, err)
           process.exit(1)
@@ -24,7 +24,7 @@ function processImages(docsDir = DOCS_DIR) {
   })
 }
 
-function getImagesFromDocs(dir) {
+function getImagesFromDocs(dir: string) {
   let results = []
 
   const files = fs.readdirSync(dir)
