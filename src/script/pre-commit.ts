@@ -1,27 +1,23 @@
 import fs from 'fs'
 import path from 'path'
-import sharp from 'sharp'
+import jimp from 'jimp'
 
 const DOCS_DIR = './docs'
 const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg']
 
-export function processImages(docsDir = DOCS_DIR) {
+export async function processImages(
+  docsDir: string = DOCS_DIR
+): Promise<void> {
   const images = getImagesFromDocs(docsDir)
 
-  images.forEach((imgPath) => {
-    sharp(imgPath)
-      .resize(800)
-      .png({ quality: 80 })
-      .toFile(`${imgPath}.tmp`, (err) => {
-        if (err) {
-          console.error(`Failed to process image: ${imgPath}`, err)
-          process.exit(1)
-        } else {
-          fs.rmSync(imgPath)
-          fs.renameSync(`${imgPath}.tmp`, imgPath)
-        }
-      })
-  })
+  await Promise.all(
+    images.map(async (imgPath) => {
+      const image = await jimp.read(imgPath)
+      await image.resize(800, jimp.AUTO).writeAsync(`${imgPath}.tmp`)
+      fs.rmSync(imgPath)
+      fs.renameSync(`${imgPath}.tmp`, imgPath)
+    })
+  )
 }
 
 export function getImagesFromDocs(dir: string) {

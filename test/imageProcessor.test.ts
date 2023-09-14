@@ -16,11 +16,10 @@ describe('Image Processor', () => {
   })
 
   test('should process images correctly', async () => {
-    processImages('./test_docs')
+    await processImages('./test_docs')
 
     const imagePath = 'test_docs\\en-question-type-answer.png'
     const metadata = await sharp(imagePath).metadata()
-
     expect(metadata.width).toBe(800)
   })
 })
