@@ -2,6 +2,15 @@
   "name": "picommit",
   "version": "0.0.0",
   "description": "✨🖼️ Git Hook tool that automatically processes document images when committing",
+  "main": "index.js",
+  "scripts": {
+    "img-process": "node scripts/pre-commit.js",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leyoonafr/picommit.git"
+  },
   "keywords": [
     "husky",
     "sharp",
@@ -10,12 +19,15 @@
   ],
   "author": "leyoonafr",
   "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bugs": {
+    "url": "https://github.com/leyoonafr/picommit/issues"
   },
+  "homepage": "https://github.com/leyoonafr/picommit#readme",
   "devDependencies": {
     "husky": "^8.0.3",
     "sharp": "^0.32.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
