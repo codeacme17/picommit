@@ -1,9 +1,7 @@
 <samp align="center">
 <p align="center">
 
-## ✨🖼️ Picommit
-
----
+# ✨🖼️ Picommit
 
 Git Hook tool that automatically processes document images when committing
 
