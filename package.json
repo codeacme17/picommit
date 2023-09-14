@@ -1,0 +1,17 @@
+{
+  "name": "picommit",
+  "version": "0.0.0",
+  "description": "✨🖼️ Git Hook tool that automatically processes document images when committing",
+  "keywords": [
+    "husky",
+    "sharp",
+    "git hook tool",
+    "Beautify Images"
+  ],
+  "author": "leyoonafr",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
