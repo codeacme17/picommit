@@ -42,3 +42,6 @@ function processImages() {
 }
 
 processImages()
+
+module.exports.getImagesFromDocs = getImagesFromDocs
+module.exports.processImages = processImages
