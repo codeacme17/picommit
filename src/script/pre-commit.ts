@@ -1,4 +1,5 @@
 import fs from 'fs'
+import asyncfs from 'fs/promises'
 import path from 'path'
 import jimp from 'jimp'
 
@@ -12,16 +13,27 @@ export async function processImages(
 
   await Promise.all(
     images.map(async (imgPath) => {
-      const image = await jimp.read(imgPath)
-      await image.resize(800, jimp.AUTO).writeAsync(`${imgPath}.tmp`)
-      fs.rmSync(imgPath)
-      fs.renameSync(`${imgPath}.tmp`, imgPath)
+      try {
+        const image = await jimp.read(imgPath)
+        await image
+          .resize(800, jimp.AUTO)
+          .writeAsync(`${imgPath}.tmp`)
+      } catch (error) {
+        console.error('Error:' + error)
+        process.exit(1)
+      }
+
+      await asyncfs.rm(imgPath)
+      await asyncfs.rename(`${imgPath}.tmp`, imgPath)
     })
-  )
+  ).catch((error) => {
+    console.error('Error:' + error)
+    process.exit(1)
+  })
 }
 
-export function getImagesFromDocs(dir: string) {
-  let results = []
+export function getImagesFromDocs(dir: string): string[] {
+  let results: string[] = []
 
   const files = fs.readdirSync(dir)
   for (const file of files) {
