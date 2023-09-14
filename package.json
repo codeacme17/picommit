@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "✨🖼️ Git Hook tool that automatically processes document images when committing",
   "main": "index.js",
+  "bin": {
+    "picommit": "./bin/picommit-cli.js"
+  },
   "scripts": {
     "img-process": "node scripts/pre-commit.js",
     "test": "jest"
