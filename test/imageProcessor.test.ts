@@ -1,15 +1,13 @@
-// imageProcessor.test.js
-
-const fs = require('fs')
 const sharp = require('sharp')
 const {
   getImagesFromDocs,
   processImages,
-} = require('../scripts/pre-commit')
+} = require('../src/script/pre-commit')
 
 describe('Image Processor', () => {
   test('should return correct image paths from docs', () => {
     const images = getImagesFromDocs('./test_docs')
+
     expect(images).toEqual(
       expect.arrayContaining([
         'test_docs\\en-question-type-answer.png',
