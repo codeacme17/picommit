@@ -5,34 +5,24 @@ const sharp = require('sharp')
 const {
   getImagesFromDocs,
   processImages,
-} = require('./imageProcessor')
+} = require('../scripts/pre-commit')
 
 describe('Image Processor', () => {
-  beforeAll(() => {
-    // Setup: Create dummy image files in DOCS_DIR for testing
-  })
-
-  afterAll(() => {
-    // Cleanup: Delete the dummy image files or restore them
-  })
-
   test('should return correct image paths from docs', () => {
     const images = getImagesFromDocs('./test_docs')
     expect(images).toEqual(
       expect.arrayContaining([
-        './test_docs/test_image.jpg',
-        // ... other expected paths
+        'test_docs\\en-question-type-answer.png',
       ])
     )
   })
 
   test('should process images correctly', async () => {
-    processImages()
+    processImages('./test_docs')
 
-    const imagePath = './test_docs/test_image.jpg'
+    const imagePath = 'test_docs\\en-question-type-answer.png'
     const metadata = await sharp(imagePath).metadata()
 
     expect(metadata.width).toBe(800)
-    // Add other assertions related to image processing
   })
 })

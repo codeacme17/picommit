@@ -5,6 +5,25 @@ const path = require('path')
 const DOCS_DIR = './docs'
 const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg']
 
+function processImages(docsDir = DOCS_DIR) {
+  const images = getImagesFromDocs(docsDir)
+
+  images.forEach((imgPath) => {
+    sharp(imgPath)
+      .resize(800)
+      .png({ quality: 80 })
+      .toFile(`${imgPath}.tmp`, (err, info) => {
+        if (err) {
+          console.error(`Failed to process image: ${imgPath}`, err)
+          process.exit(1)
+        } else {
+          fs.rmSync(imgPath)
+          fs.renameSync(`${imgPath}.tmp`, imgPath)
+        }
+      })
+  })
+}
+
 function getImagesFromDocs(dir) {
   let results = []
 
@@ -23,22 +42,6 @@ function getImagesFromDocs(dir) {
   }
 
   return results
-}
-
-function processImages() {
-  const images = getImagesFromDocs(DOCS_DIR)
-
-  images.forEach((imgPath) => {
-    sharp(imgPath)
-      .resize(800)
-      .jpeg({ quality: 80 })
-      .toFile(imgPath, (err, info) => {
-        if (err) {
-          console.error(`Failed to process image: ${imgPath}`, err)
-          process.exit(1)
-        }
-      })
-  })
 }
 
 processImages()
