@@ -4,7 +4,7 @@
   "imageProcessingOptions": {
     "width": 800,
     "height": -1,
-    "quality": 100,
+    "quality": 90,
     "shadow": {
       "opacity": 0.8,
       "size": 1.2,

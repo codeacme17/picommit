@@ -1,5 +1,4 @@
 import fs from 'fs'
-import jimp from 'jimp'
 
 const CONFIG_FILENAME = 'picommit.json'
 
@@ -23,18 +22,7 @@ export interface PicommitConfig {
 export const DEFAULT: PicommitConfig = {
   docsDirectory: './docs',
   exclude: [],
-  imageProcessingOptions: {
-    width: jimp.AUTO,
-    height: jimp.AUTO,
-    quality: 100,
-    shadow: {
-      opacity: 0,
-      size: 0,
-      blur: 0,
-      x: 0,
-      y: 0,
-    },
-  },
+  imageProcessingOptions: {},
 }
 
 export function readPicommitConfig(): PicommitConfig {
