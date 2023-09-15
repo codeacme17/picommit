@@ -19,9 +19,7 @@ export function getImagesFromDocs(
     const stat = fs.statSync(fullPath)
 
     if (stat.isDirectory()) {
-      results = results.concat(
-        getImagesFromDocs(fullPath, { exclude })
-      )
+      results = results.concat(getImagesFromDocs(fullPath, { exclude }))
     } else if (
       IMG_EXTENSIONS.includes(path.extname(file).toLowerCase()) &&
       !exclude.includes(fullPath)
@@ -33,9 +31,7 @@ export function getImagesFromDocs(
   return results
 }
 
-export async function processImages(
-  config: PicommitConfig
-): Promise<void> {
+export async function processImages(config: PicommitConfig): Promise<void> {
   const {
     docsDirectory = DEFAULT.docsDirectory,
     imageProcessingOptions = DEFAULT.imageProcessingOptions,
