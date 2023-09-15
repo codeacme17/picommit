@@ -1,8 +1,5 @@
 const sharp = require('sharp')
-const {
-  getImagesFromDocs,
-  processImages,
-} = require('../src/script/pre-commit')
+const { getImagesFromDocs, processImages } = require('../src/main')
 
 describe('Image Processor', () => {
   test('should return correct image paths from docs', () => {

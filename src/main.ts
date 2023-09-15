@@ -1,48 +1,53 @@
 import fs from 'fs'
+import asyncfs from 'fs/promises'
 import path from 'path'
+import jimp from 'jimp'
 
-// 定义文件和目录路径
-const HOOKS_DIR = path.join('.git', 'hooks')
-const CORE_HOOK_SCRIPT_PATH = path.join(
-  __dirname,
-  '../',
-  'picommit.sh'
-)
-const PICOMMIT_FILE = '.picommit'
+const DOCS_DIR = './docs'
+const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg']
 
-function installHooks(): void {
-  if (!fs.existsSync(HOOKS_DIR)) {
-    console.error(
-      'Error: .git/hooks directory not found. Are you in the root of a git repository?'
-    )
+export async function processImages(
+  docsDir: string = DOCS_DIR
+): Promise<void> {
+  const images = getImagesFromDocs(docsDir)
+
+  await Promise.all(
+    images.map(async (imgPath) => {
+      try {
+        const image = await jimp.read(imgPath)
+        await image
+          .resize(800, jimp.AUTO)
+          .writeAsync(`${imgPath}.tmp`)
+      } catch (error) {
+        console.error('Error:' + error)
+        process.exit(1)
+      }
+
+      await asyncfs.rm(imgPath)
+      await asyncfs.rename(`${imgPath}.tmp`, imgPath)
+    })
+  ).catch((error) => {
+    console.error('Error:' + error)
     process.exit(1)
+  })
+}
+
+export function getImagesFromDocs(dir: string): string[] {
+  let results: string[] = []
+
+  const files = fs.readdirSync(dir)
+  for (const file of files) {
+    const fullPath = path.join(dir, file)
+    const stat = fs.statSync(fullPath)
+
+    if (stat.isDirectory()) {
+      results = results.concat(getImagesFromDocs(fullPath))
+    } else if (
+      IMG_EXTENSIONS.includes(path.extname(file).toLowerCase())
+    ) {
+      results.push(fullPath)
+    }
   }
 
-  // 复制核心钩子脚本到 .git/hooks/pre-commit
-  fs.copyFileSync(
-    CORE_HOOK_SCRIPT_PATH,
-    path.join(HOOKS_DIR, 'pre-commit')
-  )
-  fs.chmodSync(path.join(HOOKS_DIR, 'pre-commit'), '755') // Make the hook script executable
-}
-
-function createPicommitFile(): void {
-  if (!fs.existsSync(PICOMMIT_FILE)) {
-    fs.writeFileSync(
-      PICOMMIT_FILE,
-      '# List your picommit configurations here\n'
-    )
-  }
-}
-
-// picommit-init 主逻辑
-export function picommitInit(): void {
-  installHooks()
-  createPicommitFile()
-  console.log('picommit initialized successfully.')
-}
-
-// CLI 调用逻辑
-if (require.main === module) {
-  picommitInit()
+  return results
 }

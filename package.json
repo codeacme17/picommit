@@ -2,8 +2,6 @@
   "name": "picommit",
   "version": "0.0.0",
   "description": "✨🖼️ Git Hook tool that automatically processes document images when committing",
-  "bin": "lib/bin.js",
-  "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "npx jest"
@@ -17,7 +15,7 @@
     "git hook tool",
     "Beautify Images"
   ],
-  "author": "leyoonafr",
+  "author": "leyoonafr <codeacme17@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/leyoonafr/picommit/issues"
