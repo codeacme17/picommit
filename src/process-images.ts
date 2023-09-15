@@ -6,15 +6,14 @@ import { DEFAULT, type PicommitConfig } from './main'
 
 const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
 
-let config: PicommitConfig
-
 export async function processImages(
   config: PicommitConfig
 ): Promise<void> {
   config = config
 
   const images = getImagesFromDocs(
-    config.docsDirectory || DEFAULT.docsDirectory
+    config.docsDirectory || DEFAULT.docsDirectory,
+    config
   )
 
   await Promise.all(
@@ -24,34 +23,40 @@ export async function processImages(
         const opts =
           config.imageProcessingOptions ||
           DEFAULT.imageProcessingOptions
+
         await image
           .resize(
             opts.width && Number(opts.width),
             opts.height && Number(opts.height)
           )
-          .shadow({
-            opacity:
-              opts.shadow.opacity && Number(opts.shadow.opacity),
-            size: opts.shadow.size && Number(opts.shadow.size),
-            blur: opts.shadow.blur && Number(opts.shadow.blur),
-            x: opts.shadow.x && Number(opts.shadow.x),
-            y: opts.shadow.y && Number(opts.shadow.y),
-          })
-          .quality(opts.quality || 100)
+          .shadow(
+            opts.shadow && {
+              opacity:
+                opts.shadow.opacity && Number(opts.shadow.opacity),
+              size: opts.shadow.size && Number(opts.shadow.size),
+              blur: opts.shadow.blur && Number(opts.shadow.blur),
+              x: opts.shadow.x && Number(opts.shadow.x),
+              y: opts.shadow.y && Number(opts.shadow.y),
+            }
+          )
+          .quality(opts.quality && Number(opts.quality))
           .writeAsync(`${imgPath}.tmp`)
       } catch (error) {
-        throw Error(error)
+        throw error
       }
 
       await asyncfs.rm(imgPath)
       await asyncfs.rename(`${imgPath}.tmp`, imgPath)
     })
   ).catch((error) => {
-    throw Error(error)
+    throw error
   })
 }
 
-export function getImagesFromDocs(dir: string): string[] {
+export function getImagesFromDocs(
+  dir: string,
+  config: PicommitConfig
+): string[] {
   let results: string[] = []
 
   const files = fs.readdirSync(dir)
@@ -60,7 +65,7 @@ export function getImagesFromDocs(dir: string): string[] {
     const stat = fs.statSync(fullPath)
 
     if (stat.isDirectory()) {
-      results = results.concat(getImagesFromDocs(fullPath))
+      results = results.concat(getImagesFromDocs(fullPath, config))
     } else if (
       IMG_EXTENSIONS.includes(path.extname(file).toLowerCase()) &&
       !config.exclude.includes(fullPath)

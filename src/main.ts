@@ -37,8 +37,6 @@ export const DEFAULT: PicommitConfig = {
   },
 }
 
-const config = readPicommitConfig()
-
 export function readPicommitConfig(): PicommitConfig {
   if (!fs.existsSync(CONFIG_FILENAME))
     fs.writeFileSync(CONFIG_FILENAME, JSON.stringify(DEFAULT))

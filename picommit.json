@@ -1,10 +1,16 @@
 {
-  "docsDirectory": "./test-docs",
+  "docsDirectory": "./test_docs",
+  "exclude": [],
   "imageProcessingOptions": {
     "width": 800,
-    "quality": 90,
-    "format": "jpg"
-  },
-  "include": ["**/*.{png,jpg,jpeg}"],
-  "exclude": ["**/exclude-folder/*"]
+    "height": -1,
+    "quality": 100,
+    "shadow": {
+      "opacity": 0.8,
+      "size": 1.2,
+      "blur": 10,
+      "x": 1,
+      "y": 0
+    }
+  }
 }
