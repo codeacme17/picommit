@@ -1,0 +1,10 @@
+{
+  "docsDirectory": "./test-docs",
+  "imageProcessingOptions": {
+    "width": 800,
+    "quality": 90,
+    "format": "jpg"
+  },
+  "include": ["**/*.{png,jpg,jpeg}"],
+  "exclude": ["**/exclude-folder/*"]
+}

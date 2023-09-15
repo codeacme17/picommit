@@ -1,5 +1,18 @@
 const sharp = require('sharp')
-const { getImagesFromDocs, processImages } = require('../src/main')
+const fs = require('fs')
+const {
+  getImagesFromDocs,
+  processImages,
+  readPicommitConfig,
+} = require('../src/main')
+const jimp = require('jimp')
+
+describe('Parse Config file', () => {
+  it('reads the picommit.json configuration', () => {
+    const config = readPicommitConfig()
+    expect(config.docsDirectory).toBe('./test-docs')
+  })
+})
 
 describe('Image Processor', () => {
   test('should return correct image paths from docs', () => {
