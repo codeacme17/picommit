@@ -6,6 +6,9 @@
     "build": "tsc",
     "test": "npx jest"
   },
+  "bin": {
+    "picommit": "lib/main.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leyoonafr/picommit.git"
