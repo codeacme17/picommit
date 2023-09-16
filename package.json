@@ -47,7 +47,8 @@
     "node": ">=16"
   },
   "dependencies": {
+    "image-size": "^1.0.2",
     "jimp": "^0.22.10",
-    "image-size": "^1.0.2"
+    "strip-json-comments": "^5.0.1"
   }
 }
