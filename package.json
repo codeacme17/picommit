@@ -8,6 +8,9 @@
     "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
+  "files": [
+    "lib"
+  ],
   "bin": {
     "picommit": "lib/main.js"
   },
