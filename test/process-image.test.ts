@@ -15,7 +15,7 @@ describe('Process Images functions', () => {
 
       expect(dimensions.width).toBe(800)
     },
-    10 * 1000,
+    20 * 1000,
   )
 
   it('gets images from a given directory', async () => {

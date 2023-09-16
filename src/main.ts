@@ -3,8 +3,8 @@ import asyncfs from 'fs/promises'
 import path from 'path'
 import stripJsonComments from 'strip-json-comments'
 
-const CONFIG_FILENAME = '.picommit.json'
-const TEMPLATE_FILENAME = 'template.json'
+const CONFIG_FILENAME = '.picommit.jsonc'
+const TEMPLATE_FILENAME = 'template.jsonc'
 const TEMPLATE_PATH = path.resolve(__dirname, TEMPLATE_FILENAME)
 
 export interface PicommitConfig {

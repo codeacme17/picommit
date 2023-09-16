@@ -6,7 +6,7 @@ import Jimp from 'jimp'
 import imageSize from 'image-size'
 import { DEFAULT, type PicommitConfig } from './main'
 
-const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
+const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg']
 
 export function getImagesFromDocs(
   dir: string,
