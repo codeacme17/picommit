@@ -1,0 +1,7 @@
+{
+  "docsDirectory": "./test_docs",
+  "exclude": [],
+  "imageProcessingOptions": {
+    "witdh": 800
+  }
+}
