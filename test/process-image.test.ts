@@ -1,22 +1,18 @@
 import path from 'path'
-import imageSize from 'image-size'
+import sharp from 'sharp'
 import { readPicommitConfig } from '../src/main'
 import { getImagesFromDocs, processImages } from '../src/process-images'
 
 describe('Process Images functions', () => {
-  it(
-    'process imaged',
-    async () => {
-      const config = await readPicommitConfig()
-      await processImages(config)
+  it('process imaged', async () => {
+    const config = await readPicommitConfig()
+    await processImages(config)
 
-      const imagePath = path.resolve(__dirname, '../test_docs/test.jpg')
-      const dimensions = imageSize(imagePath)
+    const imagePath = path.resolve(__dirname, '../test_docs/test.jpg')
+    const metadata = await sharp(imagePath).metadata()
 
-      expect(dimensions.width).toBe(800)
-    },
-    20 * 1000,
-  )
+    expect(metadata.width).toBe(config.imageProcessingOptions?.width)
+  })
 
   it('gets images from a given directory', async () => {
     const config = await readPicommitConfig()
