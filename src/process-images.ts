@@ -9,7 +9,7 @@ const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
 
 export function getImagesFromDocs(
   dir: string,
-  { exclude = [] }: PicommitConfig
+  { exclude = [] }: PicommitConfig,
 ): string[] {
   let results: string[] = []
   const files = fs.readdirSync(dir)
@@ -42,11 +42,11 @@ export async function processImages(config: PicommitConfig): Promise<void> {
     images.map(async (imgPath) => {
       const image = await jimp.read(imgPath)
       handleImageProcessing(image, imageProcessingOptions).writeAsync(
-        `${imgPath}.tmp`
+        `${imgPath}.tmp`,
       )
       await asyncfs.rm(imgPath)
       await asyncfs.rename(`${imgPath}.tmp`, imgPath)
-    })
+    }),
   ).catch((err) => {
     throw err
   })
@@ -54,7 +54,7 @@ export async function processImages(config: PicommitConfig): Promise<void> {
 
 function handleImageProcessing(
   image: Jimp,
-  opts: PicommitConfig['imageProcessingOptions']
+  opts: PicommitConfig['imageProcessingOptions'],
 ) {
   handleSize(image, opts)
   handleShadow(image, opts)
@@ -64,7 +64,7 @@ function handleImageProcessing(
 
 function handleSize(
   image: Jimp,
-  opts: PicommitConfig['imageProcessingOptions']
+  opts: PicommitConfig['imageProcessingOptions'],
 ) {
   const { width, height } = opts
   image.resize(Number(width), Number(height))
@@ -73,7 +73,7 @@ function handleSize(
 
 function handleShadow(
   image: Jimp,
-  opts: PicommitConfig['imageProcessingOptions']
+  opts: PicommitConfig['imageProcessingOptions'],
 ) {
   image.shadow(
     opts.shadow && {
@@ -82,14 +82,14 @@ function handleShadow(
       blur: opts.shadow.blur && Number(opts.shadow.blur),
       x: opts.shadow.x && Number(opts.shadow.x),
       y: opts.shadow.y && Number(opts.shadow.y),
-    }
+    },
   )
   return image
 }
 
 function handleQuality(
   image: Jimp,
-  opts: PicommitConfig['imageProcessingOptions']
+  opts: PicommitConfig['imageProcessingOptions'],
 ) {
   image.quality(opts.quality && Number(opts.quality))
   return image
