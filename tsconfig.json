@@ -16,6 +16,7 @@
   "exclude": [
     "test/**/*.ts",
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "__mocks__/*"
   ]
 }
