@@ -3,7 +3,7 @@ import path from 'path'
 import sharp from 'sharp'
 import { DEFAULT, type PicommitConfig } from './main'
 
-const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg']
+const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
 
 export function getImagesFromDocs(
   dir: string,
@@ -40,8 +40,6 @@ export async function processImages(config: PicommitConfig): Promise<void> {
   await Promise.all(
     images.map(async (imgPath) => {
       await handleImageProcessing(imgPath, imageProcessingOptions)
-      await fs.promises.rm(imgPath)
-      await fs.promises.rename(`${imgPath}.tmp`, imgPath)
     }),
   ).catch((err) => {
     throw err
@@ -53,17 +51,17 @@ async function handleImageProcessing(
   opts: PicommitConfig['imageProcessingOptions'],
 ) {
   let image = sharp(imgPath)
-  image = handleSize(image, opts)
-  // Note: sharp doesn't support shadows out of the box. You might need to implement this manually or with another library.
-  // image = handleShadow(image, opts)
-  image = handleQuality(image, opts)
-  await image.toFile(`${imgPath}.tmp`)
+  if (opts.width || opts.height) image = handleSize(image, opts)
+  if (opts.quality) image = handleQuality(image, opts, imgPath)
+  if (opts.shadow) image = await handleShadow(image, opts)
+  await image.toFile(imgPath)
 }
 
 function handleSize(
   image: sharp.Sharp,
   opts: PicommitConfig['imageProcessingOptions'],
 ): sharp.Sharp {
+  if (opts.width < 100 || opts.height < 100) return image
   const { width, height } = opts
   return image.resize(width, height)
 }
@@ -71,9 +69,57 @@ function handleSize(
 function handleQuality(
   image: sharp.Sharp,
   opts: PicommitConfig['imageProcessingOptions'],
+  imgPath: string,
 ): sharp.Sharp {
+  if (10 > opts.quality || opts.quality > 100) return image
   const quality = opts.quality || 100
-  return image.jpeg({ quality })
+  let extention = path.extname(imgPath).toLowerCase().substring(1)
+  if (extention === 'jpg') extention = 'jpeg'
+  return image[extention]({ quality })
 }
 
-// Note: handleShadow function is commented out since sharp doesn't provide direct shadow implementation.
+async function handleShadow(
+  image: sharp.Sharp,
+  opts: PicommitConfig['imageProcessingOptions'],
+): Promise<sharp.Sharp> {
+  const blur = opts.shadow.blur || 0
+  const opacity = opts.shadow.opacity || 0
+  const offsetX = opts.shadow.x || 0
+  const offsetY = opts.shadow.y || 0
+
+  const { width, height } = await image.metadata()
+
+  const shadow = await sharp(
+    Buffer.from(`
+      <svg
+        width="${width}"
+        height="${height}"
+      >
+        <rect
+          width="${width}"
+          height="${height}"
+          x="${offsetX}"
+          y="${offsetY}"
+          fill="rgba(0, 0, 0, ${opacity})"
+        />
+      </svg>`),
+  )
+    .blur(blur)
+    .toBuffer()
+
+  const image_ = await image
+    .resize(width - 2 * offsetX, height - 2 * offsetY)
+    .toBuffer()
+
+  return sharp({
+    create: {
+      width: width + offsetX,
+      height: height + offsetY,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    },
+  }).composite([
+    { input: shadow, blend: 'multiply' },
+    { input: image_, blend: 'over' },
+  ])
+}
