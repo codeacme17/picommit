@@ -2,6 +2,10 @@
   "docsDirectory": "./test_docs",
   "exclude": [],
   "imageProcessingOptions": {
-    "witdh": 800
+    "width": "-2",
+    "height": "400",
+    "shadow": {
+      "blur": 2
+    }
   }
 }

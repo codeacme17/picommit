@@ -9,7 +9,7 @@ export interface PicommitConfig {
   docsDirectory?: string
   exclude?: string[]
   imageProcessingOptions?: {
-    width?: number | 'auto'
+    width?: number
     height?: number
     quality?: number
     shadow?: {

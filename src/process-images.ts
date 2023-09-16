@@ -2,7 +2,8 @@ import fs from 'fs'
 import asyncfs from 'fs/promises'
 import path from 'path'
 import jimp from 'jimp'
-import type Jimp from 'jimp'
+import Jimp from 'jimp'
+import imageSize from 'image-size'
 import { DEFAULT, type PicommitConfig } from './main'
 
 const IMG_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp']
@@ -11,8 +12,9 @@ export function getImagesFromDocs(
   dir: string,
   { exclude = [] }: PicommitConfig,
 ): string[] {
-  let results: string[] = []
   const files = fs.readdirSync(dir)
+
+  let results: string[] = []
 
   for (const file of files) {
     const fullPath = path.join(dir, file)
@@ -40,10 +42,7 @@ export async function processImages(config: PicommitConfig): Promise<void> {
 
   await Promise.all(
     images.map(async (imgPath) => {
-      const image = await jimp.read(imgPath)
-      handleImageProcessing(image, imageProcessingOptions).writeAsync(
-        `${imgPath}.tmp`,
-      )
+      await handleImageProcessing(imgPath, imageProcessingOptions)
       await asyncfs.rm(imgPath)
       await asyncfs.rename(`${imgPath}.tmp`, imgPath)
     }),
@@ -52,22 +51,30 @@ export async function processImages(config: PicommitConfig): Promise<void> {
   })
 }
 
-function handleImageProcessing(
-  image: Jimp,
+async function handleImageProcessing(
+  imgPath: string,
   opts: PicommitConfig['imageProcessingOptions'],
 ) {
-  handleSize(image, opts)
+  const image = await jimp.read(imgPath)
+  handleSize(image, opts, imgPath)
   handleShadow(image, opts)
   handleQuality(image, opts)
-  return image
+  image.writeAsync(`${imgPath}.tmp`)
 }
 
 function handleSize(
   image: Jimp,
   opts: PicommitConfig['imageProcessingOptions'],
+  imgPath: string,
 ) {
-  const { width, height } = opts
-  image.resize(Number(width), Number(height))
+  const dimensions = imageSize(imgPath)
+  let width = opts.width ? Number(opts.width) : Jimp.AUTO
+  let height = opts.height ? Number(opts.height) : Jimp.AUTO
+  if (width === Jimp.AUTO && height === Jimp.AUTO) {
+    width = dimensions.width
+    height = dimensions.height
+  }
+  image.resize(width, height)
   return image
 }
 
@@ -75,15 +82,21 @@ function handleShadow(
   image: Jimp,
   opts: PicommitConfig['imageProcessingOptions'],
 ) {
-  image.shadow(
-    opts.shadow && {
-      opacity: opts.shadow.opacity && Number(opts.shadow.opacity),
-      size: opts.shadow.size && Number(opts.shadow.size),
-      blur: opts.shadow.blur && Number(opts.shadow.blur),
-      x: opts.shadow.x && Number(opts.shadow.x),
-      y: opts.shadow.y && Number(opts.shadow.y),
-    },
-  )
+  if (!opts.shadow || !Object.keys(opts.shadow).length) return image
+
+  const opacity = opts.shadow.opacity && Number(opts.shadow.opacity)
+  const size = opts.shadow.size && Number(opts.shadow.size)
+  const blur = opts.shadow.blur && Number(opts.shadow.blur)
+  const x = opts.shadow.x && Number(opts.shadow.x)
+  const y = opts.shadow.y && Number(opts.shadow.y)
+
+  image.shadow({
+    opacity,
+    size,
+    blur,
+    x,
+    y,
+  })
   return image
 }
 
@@ -91,6 +104,7 @@ function handleQuality(
   image: Jimp,
   opts: PicommitConfig['imageProcessingOptions'],
 ) {
-  image.quality(opts.quality && Number(opts.quality))
+  const quality = opts.quality ? 100 : Number(opts.quality)
+  image.quality(quality)
   return image
 }
