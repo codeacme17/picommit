@@ -92,17 +92,18 @@ async function handleShadow(
 
   const shadow = await sharp(
     Buffer.from(`
-      <svg
-        width="${width}"
-        height="${height}"
-      >
+      <svg width="${width}" height="${height}">
+        <defs>
+          <radialGradient id="gradient" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+            <stop offset="0%" style="stop-color:rgba(0, 0, 0, 0)" />
+            <stop offset="100%" style="stop-color:rgba(0, 0, 0, ${opacity})" />
+          </radialGradient>
+        </defs>
         <rect
-          width="${width - 4 * offsetX}"
-          height="${width - 4 * offsetX}"
-          x="${0}"
-          y="${0}"
-          fill="rgba(0, 0, 0, ${opacity})"
-        />
+        width="${width - 2 * offsetX}"
+        height="${
+          height - 2 * offsetX
+        }" fill="url(#gradient)" x="${offsetX}" y="${offsetY}"/>
       </svg>`),
   )
     .blur(blur)

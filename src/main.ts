@@ -16,7 +16,6 @@ export interface PicommitConfig {
     quality?: number
     shadow?: {
       opacity?: number
-      size?: number
       blur?: number
       x?: number
       y?: number
