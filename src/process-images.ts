@@ -78,6 +78,7 @@ function handleQuality(
   return image[extention]({ quality })
 }
 
+// https://github.com/lovell/sharp/issues/1490
 async function handleShadow(
   image: sharp.Sharp,
   opts: PicommitConfig['imageProcessingOptions'],
@@ -96,10 +97,10 @@ async function handleShadow(
         height="${height}"
       >
         <rect
-          width="${width}"
-          height="${height}"
-          x="${offsetX}"
-          y="${offsetY}"
+          width="${width - 4 * offsetX}"
+          height="${width - 4 * offsetX}"
+          x="${0}"
+          y="${0}"
           fill="rgba(0, 0, 0, ${opacity})"
         />
       </svg>`),
@@ -108,7 +109,7 @@ async function handleShadow(
     .toBuffer()
 
   const image_ = await image
-    .resize(width - 2 * offsetX, height - 2 * offsetY)
+    .resize(width - 4 * offsetX, height - 4 * offsetY)
     .toBuffer()
 
   return sharp({
