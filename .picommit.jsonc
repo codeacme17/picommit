@@ -2,26 +2,24 @@
   // Directory containing the documents to be processed
   "docsDirectory": "./test_docs",
   // List of files or directories to exclude from processing (only filename not path)
-  "exclude": [
-    "test.png"
-  ],
+  "exclude": [],
   // Options for image processing
   "imageProcessingOptions": {
-    // Desired width of the image after processing
+    // Desired width of the image after processing(0 = auto)
     "width": 600,
-    // Desired height of the image after processing
-    // "height": 200,
+    // Desired height of the image after processing (0 = auto)
+    "height": 0,
     // Desired quality of the image (0 to 100)
-    "quality": 90,
-    // Shadow options for the image
+    "quality": 100,
+    // Shadow options for the image (only work with .png)
     "shadow": {
-      // Opacity of the shadow (0 to 1)
+      // Opacity of the shadow (0 to 1, recommend 0.5)
       "opacity": 0.5,
-      // Blur level of the shadow (min to 1)
-      "blur": 5,
-      // Horizontal offset of the shadow
+      // Blur level of the shadow (min to 1, recommend 2~4)
+      "blur": 3,
+      // Horizontal offset of the shadow (recommend 5)
       "x": 5,
-      // Verical offset of the shadow
+      // Vertical offset of the shadow (recommend 5)
       "y": 5
     }
   }

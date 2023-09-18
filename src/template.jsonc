@@ -5,24 +5,22 @@
   "exclude": [],
   // Options for image processing
   "imageProcessingOptions": {
-    // Desired width of the image after processing(-1 = auto)
-    "width": -1,
-    // Desired height of the image after processing(-1 = auto)
-    "height": -1,
+    // Desired width of the image after processing(0 = auto)
+    "width": 600,
+    // Desired height of the image after processing (0 = auto)
+    "height": 0,
     // Desired quality of the image (0 to 100)
-    "quality": 90,
+    "quality": 100,
     // Shadow options for the image (only work with .png)
     "shadow": {
-      // Opacity of the shadow (0 to 1)
+      // Opacity of the shadow (0 to 1, recommend 0.5)
       "opacity": 0.5,
-      // Size of the shadow
-      "size": 5,
-      // Blur level of the shadow (min to 1)
+      // Blur level of the shadow (min to 1, recommend 2~4)
       "blur": 3,
-      // Horizontal offset of the shadow
-      "x": 2,
-      // Vertical offset of the shadow
-      "y": 2
+      // Horizontal offset of the shadow (recommend 5)
+      "x": 5,
+      // Vertical offset of the shadow (recommend 5)
+      "y": 5
     }
   }
 }
