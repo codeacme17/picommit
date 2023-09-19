@@ -1,4 +1,3 @@
-<samp>
 <p>
 
 # Picommit
@@ -38,4 +37,3 @@ Contributions to the project are welcome! If you find a bug or have an idea for 
 
 [MIT](/LICENSE) License © 2023-Present [leyoonafr](https://github.com/codeacme17)
 
-</samp>
