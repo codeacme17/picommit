@@ -1,2 +1,4 @@
 node_modules/*
-test_docs/*
+
+# My test dir
+test_docs
