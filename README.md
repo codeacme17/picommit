@@ -9,6 +9,10 @@ Git Hook tool that automatically processes document images when committing âœ¨ðŸ
 
 </p>
 
+## Inspiration
+
+As the project grows, the documentation might require many screenshots or images to showcase features. Often, these images are not beautified (like adding shadows or rounded corners). So, I've chosen to create an application with the purpose of automatically beautifying images within the documentation when the git pre-commit hook is triggered.
+
 ## Getting started
 
 1. Install `husky` and auto-init
