@@ -11,6 +11,8 @@
     "height": 0,
     // Desired quality of the image (0 to 100)
     "quality": 100,
+    // Desired radius of the image (0 to 100)
+    "radius": 20,
     // Shadow options for the image (only work with .png)
     "shadow": {
       // Opacity of the shadow (0 to 1, recommend 0.5)

@@ -66,6 +66,14 @@ function handleSize(
   return image.resize(width, height)
 }
 
+/**
+ * Applies quality settings to an image using Sharp library.
+ *
+ * @param image - The Sharp object representing the image to process.
+ * @param opts - The image processing options to apply.
+ * @param imgPath - The path to the image file being processed.
+ * @returns A Sharp object with the quality settings applied.
+ */
 function handleQuality(
   image: sharp.Sharp,
   opts: PicommitConfig['imageProcessingOptions'],
@@ -78,7 +86,14 @@ function handleQuality(
   return image[extention]({ quality })
 }
 
-// https://github.com/lovell/sharp/issues/1490
+/**
+ * Applies a shadow effect to the given image using the provided options.
+ * https://github.com/lovell/sharp/issues/1490
+ *
+ * @param image - The image to apply the shadow effect to.
+ * @param opts - The options for the shadow effect.
+ * @returns A Promise that resolves with the processed image.
+ */
 async function handleShadow(
   image: sharp.Sharp,
   opts: PicommitConfig['imageProcessingOptions'],
