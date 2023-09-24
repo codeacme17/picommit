@@ -51,10 +51,17 @@ async function handleImageProcessing(
   opts: PicommitConfig['imageProcessingOptions'],
 ) {
   let image = sharp(imgPath)
+  const ext = path.extname(imgPath)
+  const baseName = path.basename(imgPath, ext)
+  const outputPath = path.join(path.dirname(imgPath), baseName + ext)
+
   if (opts.width || opts.height) image = handleSize(image, opts)
   if (opts.quality) image = handleQuality(image, opts, imgPath)
+  if (opts.radius) image = await handleRadius(image, opts)
   if (opts.shadow) image = await handleShadow(image, opts)
-  await image.toFile(imgPath)
+
+  await fs.promises.unlink(imgPath)
+  await image.toFile(outputPath)
 }
 
 function handleSize(
@@ -84,6 +91,23 @@ function handleQuality(
   let extention = path.extname(imgPath).toLowerCase().substring(1)
   if (extention === 'jpg') extention = 'jpeg'
   return image[extention]({ quality })
+}
+
+async function handleRadius(
+  image: sharp.Sharp,
+  opts: PicommitConfig['imageProcessingOptions'],
+): Promise<sharp.Sharp> {
+  if (opts.radius < 0 || opts.radius > 100) return image
+  const radius = opts.radius || 0
+  const { width, height } = await image.metadata()
+
+  const svg = Buffer.from(
+    `<svg><rect x="0" y="0" width="${width}" height="${height}" rx="${radius}" ry="${radius}" /></svg>`,
+  )
+
+  return image
+    .resize(width, height, { fit: 'cover' })
+    .composite([{ input: svg, blend: 'dest-in' }])
 }
 
 /**

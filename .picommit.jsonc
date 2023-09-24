@@ -6,11 +6,12 @@
   // Options for image processing
   "imageProcessingOptions": {
     // Desired width of the image after processing(0 = auto)
-    "width": 600,
+    "width": 0,
     // Desired height of the image after processing (0 = auto)
     "height": 0,
     // Desired quality of the image (0 to 100)
     "quality": 100,
+    "radius": 20,
     // Shadow options for the image (only work with .png)
     "shadow": {
       // Opacity of the shadow (0 to 1, recommend 0.5)
